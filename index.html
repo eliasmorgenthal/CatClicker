@@ -1,1995 +1,1888 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Your favicon -->
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-
-<meta name="theme-color" content="#f3a7c7">
-<meta name="description" content="Cat Clicker :3 — pet cats, buy silly upgrades, unlock achievements.">
-
-<title>Cat Clicker :3</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #45384f;
-
-  background:
-    radial-gradient(circle at 20% 20%, #ffe8f3 0 12%, transparent 35%),
-    radial-gradient(circle at 80% 10%, #e8e4ff 0 10%, transparent 35%),
-    linear-gradient(135deg, #fff7fb, #f4f0ff);
-
-  overflow-x: hidden;
-}
-
-button {
-  font: inherit;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* =========================
-   TITLE SCREEN
-========================= */
-
-.screen {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-}
-
-.title-card {
-  width: min(700px, 94vw);
-  padding: 50px 35px;
-  text-align: center;
-
-  background: rgba(255,255,255,.72);
-  border: 3px solid white;
-  border-radius: 36px;
-
-  box-shadow:
-    0 30px 90px rgba(94,70,112,.18);
-
-  backdrop-filter: blur(15px);
-}
-
-.logo {
-  font-size: clamp(5rem, 15vw, 9rem);
-  line-height: 1;
-
-  filter:
-    drop-shadow(0 14px 10px rgba(103,70,91,.13));
-
-  animation: floatingCat 3s ease-in-out infinite;
-}
-
-@keyframes floatingCat {
-  50% {
-    transform: translateY(-10px) rotate(-3deg);
-  }
-}
-
-.title-card h1 {
-  margin: 12px 0 0;
-
-  font-size: clamp(3rem, 8vw, 5.5rem);
-  letter-spacing: -4px;
-}
-
-.tagline {
-  opacity: .62;
-  margin: 0 0 28px;
-  font-size: 1.1rem;
-}
-
-.menu-buttons {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.primary,
-.secondary {
-  border-radius: 18px;
-  padding: 15px 28px;
-  font-weight: 850;
-  cursor: pointer;
-  transition: .15s;
-}
-
-.primary {
-  border: 0;
-  background: #e996bc;
-  color: white;
-
-  box-shadow: 0 8px 0 #c66e99;
-}
-
-.primary:hover {
-  transform: translateY(-2px);
-}
-
-.primary:active {
-  transform: translateY(5px);
-  box-shadow: 0 3px 0 #c66e99;
-}
-
-.secondary {
-  background: white;
-  color: #55425e;
-  border: 2px solid #eee2f1;
-}
-
-.secondary:hover {
-  transform: translateY(-2px);
-}
-
-.save-note {
-  font-size: .78rem;
-  opacity: .5;
-  margin-top: 20px;
-}
-
-
-/* =========================
-   GAME
-========================= */
-
-.game {
-  width: min(1080px, 96vw);
-  margin: 24px auto;
-  padding: 22px;
-
-  border: 3px solid white;
-  border-radius: 30px;
-
-  background: rgba(255,255,255,.68);
-
-  box-shadow:
-    0 25px 80px rgba(94,70,112,.18);
-
-  backdrop-filter: blur(14px);
-
-  display: grid;
-  grid-template-columns: 1fr 330px;
-  gap: 20px;
-}
-
-.topbar {
-  grid-column: 1 / -1;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.brand {
-  font-weight: 950;
-  font-size: 1.35rem;
-}
-
-.top-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.icon-btn {
-  border: 2px solid #eee3f0;
-  background: white;
-  border-radius: 13px;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.icon-btn:hover {
-  background: #fff8fc;
-}
-
-
-/* =========================
-   MAIN CAT AREA
-========================= */
-
-.main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 590px;
-
-  text-align: center;
-}
-
-.score {
-  font-size: 1.45rem;
-  font-weight: 900;
-
-  background: white;
-  padding: 10px 22px;
-  border-radius: 999px;
-
-  box-shadow:
-    0 8px 25px rgba(70,50,80,.1);
-}
-
-.cat-wrap {
-  position: relative;
-  margin: 28px 0 18px;
-}
-
-.cat-button {
-  border: 0;
-  background: transparent;
-
-  cursor: pointer;
-  padding: 0;
-
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.cat {
-  width: 300px;
-  height: 300px;
-
-  border-radius: 48% 52% 50% 50%;
-
-  background: var(--cat, #f3a7c7);
-
-  border: 9px solid white;
-
-  box-shadow:
-    inset 0 -20px rgba(0,0,0,.035),
-    0 22px 50px rgba(100,60,100,.2);
-
-  display: grid;
-  place-items: center;
-
-  font-size: 155px;
-
-  transition: transform .1s;
-}
-
-.cat-button:hover .cat {
-  transform: translateY(-5px) rotate(-2deg);
-}
-
-.cat-button:active .cat {
-  transform: scale(.92) rotate(3deg);
-}
-
-/* Restartable animation */
-.cat.bounce {
-  animation: catBounce .23s ease-out;
-}
-
-@keyframes catBounce {
-  0% {
-    transform: scale(1) rotate(0);
-  }
-
-  35% {
-    transform: scale(.86) rotate(5deg);
-  }
-
-  70% {
-    transform: scale(1.07) rotate(-4deg);
-  }
-
-  100% {
-    transform: scale(1) rotate(0);
-  }
-}
-
-.cat-name {
-  font-size: 1.5rem;
-  font-weight: 900;
-}
-
-.hint {
-  opacity: .55;
-  font-size: .9rem;
-}
-
-.tiny {
-  font-size: .78rem;
-  opacity: .5;
-  margin-top: 8px;
-}
-
-
-/* =========================
-   SHOP
-========================= */
-
-.shop {
-  background: rgba(255,255,255,.78);
-  border-radius: 24px;
-  padding: 20px;
-
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.9);
-}
-
-.shop h2 {
-  margin: 0 0 14px;
-}
-
-.upgrade {
-  width: 100%;
-
-  border: 2px solid #eee5f2;
-  background: white;
-  color: inherit;
-
-  border-radius: 18px;
-
-  padding: 14px;
-  margin: 7px 0;
-
-  text-align: left;
-
-  cursor: pointer;
-
-  transition: .15s;
-}
-
-.upgrade:hover:not(:disabled) {
-  transform: translateY(-2px);
-
-  border-color: #e4b4d5;
-
-  box-shadow:
-    0 8px 20px rgba(90,60,100,.1);
-}
-
-.upgrade:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
-.upgrade-title {
-  font-weight: 850;
-  font-size: 1rem;
-}
-
-.upgrade-info {
-  display: flex;
-  justify-content: space-between;
-
-  margin-top: 5px;
-
-  font-size: .84rem;
-  opacity: .7;
-}
-
-.stats {
-  margin-top: 15px;
-  padding-top: 15px;
-
-  border-top: 2px dashed #eadfec;
-
-  font-size: .9rem;
-  line-height: 1.7;
-}
-
-
-/* =========================
-   FLOATING NUMBERS
-========================= */
-
-.float {
-  position: fixed;
-
-  pointer-events: none;
-
-  font-weight: 900;
-  color: #d65d9c;
-
-  animation:
-    floatUp .8s ease-out forwards;
-
-  z-index: 20;
-}
-
-@keyframes floatUp {
-  to {
-    transform:
-      translateY(-75px)
-      scale(1.15);
-
-    opacity: 0;
-  }
-}
-
-
-/* =========================
-   MODALS
-========================= */
-
-.modal {
-  position: fixed;
-  inset: 0;
-
-  background: rgba(51,38,59,.4);
-
-  display: grid;
-  place-items: center;
-
-  padding: 20px;
-
-  z-index: 30;
-}
-
-.modal-card {
-  width: min(720px, 95vw);
-
-  max-height: 85vh;
-  overflow: auto;
-
-  background: white;
-
-  border-radius: 28px;
-
-  padding: 25px;
-
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.2);
-}
-
-.modal-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-head h2 {
-  margin: 0 0 18px;
-}
-
-.close {
-  border: 0;
-  background: #f4edf5;
-
-  border-radius: 12px;
-
-  padding: 8px 12px;
-
-  cursor: pointer;
-}
-
-
-/* =========================
-   CAT COLLECTION
-========================= */
-
-.cats {
-  display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(135px,1fr));
-
-  gap: 10px;
-}
-
-.cat-choice {
-  border: 2px solid #eee4f1;
-
-  background: white;
-
-  border-radius: 17px;
-
-  padding: 13px;
-
-  cursor: pointer;
-}
-
-.cat-choice:hover:not(:disabled) {
-  transform: translateY(-2px);
-}
-
-.cat-choice.selected {
-  border-color: #d889b2;
-
-  box-shadow:
-    0 0 0 3px rgba(216,137,178,.2);
-}
-
-.cat-choice:disabled {
-  opacity: .45;
-  cursor: not-allowed;
-}
-
-.mini-cat {
-  font-size: 3rem;
-}
-
-.cat-choice b {
-  display: block;
-}
-
-.cat-choice small {
-  opacity: .7;
-}
-
-
-/* =========================
-   ACHIEVEMENTS
-========================= */
-
-.achievements {
-  display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(210px,1fr));
-
-  gap: 10px;
-}
-
-.achievement {
-  padding: 14px;
-
-  border-radius: 16px;
-
-  background: #f7f3f8;
-
-  border: 2px solid #eee5f0;
-}
-
-.achievement.locked {
-  opacity: .43;
-  filter: grayscale(1);
-}
-
-.achievement b {
-  display: block;
-}
-
-
-/* =========================
-   TOAST
-========================= */
-
-.toast {
-  position: fixed;
-
-  right: 22px;
-  bottom: 22px;
-
-  background: #49374f;
-  color: white;
-
-  padding: 14px 17px;
-
-  border-radius: 16px;
-
-  font-weight: 800;
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.2);
-
-  transform: translateY(100px);
-  opacity: 0;
-
-  transition: .25s;
-
-  z-index: 50;
-}
-
-.toast.show {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 800px) {
-
-  body {
-    overflow: auto;
-    padding: 12px 0;
-  }
-
-  .game {
-    grid-template-columns: 1fr;
-    padding: 18px;
-  }
-
-  .topbar {
-    grid-column: auto;
-  }
-
-  .main {
-    min-height: 520px;
-  }
-
-  .cat {
-    width: 240px;
-    height: 240px;
-    font-size: 125px;
-  }
-
-  .shop {
-    order: 2;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cat Clicker :3</title>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <meta
+    name="description"
+    content="Cat Clicker :3 — pet cats, buy silly upgrades, unlock achievements and become the ultimate cat billionaire."
+  >
+
+  <meta name="theme-color" content="#f3a7c7">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --pink: #f3a7c7;
+      --pink-dark: #c8759d;
+      --cream: #fff8f1;
+      --dark: #40333c;
+      --purple: #a78bd4;
+      --green: #9bd8bc;
+      --yellow: #ffe28a;
+      --shadow: 0 10px 30px rgba(80, 45, 65, 0.15);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background:
+        radial-gradient(circle at 20% 20%, #fff1f7 0, transparent 30%),
+        radial-gradient(circle at 80% 30%, #eee8ff 0, transparent 30%),
+        linear-gradient(135deg, #ffeaf3, #f5efff);
+
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================================================
+       TITLE SCREEN
+    ========================================================= */
+
+    #titleScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .title-card {
+      width: min(700px, 100%);
+      text-align: center;
+      padding: 55px 35px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 3px solid rgba(255,255,255,0.8);
+      border-radius: 35px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .title-cat {
+      font-size: 5rem;
+      animation: floatCat 3s ease-in-out infinite;
+      margin-bottom: 8px;
+    }
+
+    @keyframes floatCat {
+      0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-10px) rotate(2deg);
+      }
+    }
+
+    .title-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-size: clamp(2.8rem, 8vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: -3px;
+      color: #51404a;
+      text-shadow: 4px 4px 0 #f3c2d8;
+    }
+
+    .version-badge {
+      position: absolute;
+      top: -20px;
+      right: -70px;
+
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      font-weight: 1000;
+      color: #ffe17c;
+
+      transform: rotate(-12deg);
+
+      text-shadow:
+        2px 2px 0 #765367,
+        -1px -1px 0 #765367,
+        1px -1px 0 #765367,
+        -1px 1px 0 #765367;
+
+      animation: versionWiggle 2.5s ease-in-out infinite;
+    }
+
+    @keyframes versionWiggle {
+      0%, 100% {
+        transform: rotate(-12deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(-8deg) scale(1.08);
+      }
+    }
+
+    .tagline {
+      margin: 20px auto 30px;
+      max-width: 500px;
+      font-size: 1.15rem;
+      opacity: 0.75;
+    }
+
+    .title-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: min(330px, 100%);
+      margin: auto;
+    }
+
+    .main-button {
+      border: none;
+      padding: 16px 22px;
+      border-radius: 18px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1.05rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 0 rgba(90, 55, 70, 0.18);
+    }
+
+    .main-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .main-button:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(90, 55, 70, 0.18);
+    }
+
+    .start-button {
+      background: var(--pink);
+      color: white;
+    }
+
+    .continue-button {
+      background: #e9ddf8;
+      color: #574867;
+    }
+
+    .save-note {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      opacity: 0.55;
+    }
+
+    /* =========================================================
+       GAME
+    ========================================================= */
+
+    #gameScreen {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      padding: 14px 20px;
+
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+
+      border-bottom: 2px solid rgba(100,70,90,0.08);
+    }
+
+    .brand {
+      font-weight: 1000;
+      font-size: 1.2rem;
+    }
+
+    .top-buttons {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .small-button {
+      border: none;
+      background: #f2e7ef;
+      color: var(--dark);
+      padding: 9px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .small-button:hover {
+      background: #ead7e3;
+    }
+
+    .game-layout {
+      width: min(1250px, 100%);
+      margin: auto;
+      padding: 25px;
+
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 22px;
+    }
+
+    /* =========================================================
+       CAT AREA
+    ========================================================= */
+
+    .cat-panel {
+      min-height: 650px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      padding: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cat-panel::before {
+      content: "";
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: var(--cat-color, #f3a7c7);
+      opacity: 0.12;
+      filter: blur(5px);
+    }
+
+    .score-label {
+      position: relative;
+      font-size: 0.95rem;
+      opacity: 0.6;
+      font-weight: 800;
+    }
+
+    #score {
+      position: relative;
+      margin: 3px 0 5px;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 1000;
+      line-height: 1;
+      letter-spacing: -3px;
+    }
+
+    .rate {
+      position: relative;
+      opacity: 0.7;
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+    }
+
+    .cat-button {
+      position: relative;
+      border: none;
+      background: none;
+      cursor: pointer;
+      user-select: none;
+
+      width: min(310px, 70vw);
+      height: min(310px, 70vw);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cat-button:focus-visible {
+      outline: 4px solid #a78bd4;
+    }
+
+    .cat {
+      width: 75%;
+      height: 75%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background: var(--cat-color, #f3a7c7);
+
+      box-shadow:
+        0 15px 0 rgba(70,40,55,0.12),
+        0 20px 35px rgba(70,40,55,0.14);
+
+      font-size: clamp(6rem, 18vw, 11rem);
+
+      transition:
+        transform 0.1s ease,
+        filter 0.2s;
+    }
+
+    .cat-button:hover .cat {
+      filter: brightness(1.04);
+    }
+
+    .cat.bounce {
+      animation: catBounce 0.22s ease-out;
+    }
+
+    @keyframes catBounce {
+      0% {
+        transform: scale(1) rotate(0);
+      }
+
+      35% {
+        transform: scale(0.88) rotate(4deg);
+      }
+
+      70% {
+        transform: scale(1.08) rotate(-3deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    .cat-name {
+      position: relative;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: 1000;
+    }
+
+    .cat-hint {
+      position: relative;
+      opacity: 0.55;
+      margin-top: 3px;
+    }
+
+    .floating-text {
+      position: absolute;
+      pointer-events: none;
+      font-weight: 1000;
+      font-size: 1.4rem;
+      animation: floatText 0.9s ease-out forwards;
+      z-index: 5;
+    }
+
+    @keyframes floatText {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-90px) scale(1.2);
+      }
+    }
+
+    .combo-display {
+      position: absolute;
+      top: 25px;
+      right: 30px;
+
+      font-weight: 1000;
+      font-size: 1.15rem;
+
+      opacity: 0;
+      transform: scale(0.8);
+      transition: 0.2s;
+    }
+
+    .combo-display.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* =========================================================
+       SHOP
+    ========================================================= */
+
+    .shop {
+      background: rgba(255,255,255,0.8);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+
+      max-height: calc(100vh - 110px);
+      overflow-y: auto;
+    }
+
+    .shop h2 {
+      margin: 0 0 5px;
+      font-size: 1.7rem;
+    }
+
+    .shop-subtitle {
+      font-size: 0.85rem;
+      opacity: 0.6;
+      margin-bottom: 15px;
+    }
+
+    .upgrade-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .upgrade {
+      width: 100%;
+      text-align: left;
+
+      border: 2px solid transparent;
+      background: #fff8fb;
+
+      border-radius: 17px;
+      padding: 13px;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.12s,
+        background 0.12s,
+        border 0.12s;
+    }
+
+    .upgrade:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #fff0f7;
+      border-color: #efbfd4;
+    }
+
+    .upgrade:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .upgrade-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .upgrade-name {
+      font-weight: 1000;
+    }
+
+    .upgrade-level {
+      font-size: 0.72rem;
+      opacity: 0.55;
+    }
+
+    .upgrade-description {
+      font-size: 0.78rem;
+      opacity: 0.65;
+      margin-top: 4px;
+    }
+
+    .upgrade-cost {
+      margin-top: 8px;
+      font-weight: 900;
+      font-size: 0.85rem;
+    }
+
+    /* =========================================================
+       MODALS
+    ========================================================= */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+
+      background: rgba(35, 25, 35, 0.55);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal {
+      width: min(850px, 100%);
+      max-height: 85vh;
+      overflow-y: auto;
+
+      background: #fffafc;
+      border-radius: 28px;
+      padding: 25px;
+
+      box-shadow: 0 30px 70px rgba(20, 10, 20, 0.25);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+    }
+
+    .close-button {
+      border: none;
+      background: #f1e3eb;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: 1000;
+      font-size: 1.1rem;
+    }
+
+    /* =========================================================
+       CATS
+    ========================================================= */
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 12px;
+    }
+
+    .cat-card {
+      border: 2px solid transparent;
+      background: white;
+      border-radius: 20px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .cat-card.selected {
+      border-color: var(--pink);
+    }
+
+    .cat-card.locked {
+      opacity: 0.55;
+    }
+
+    .cat-icon {
+      font-size: 3.5rem;
+      margin-bottom: 5px;
+    }
+
+    .cat-card-name {
+      font-weight: 1000;
+    }
+
+    .cat-card-desc {
+      font-size: 0.75rem;
+      opacity: 0.6;
+      min-height: 35px;
+      margin: 5px 0 10px;
+    }
+
+    .cat-card button {
+      width: 100%;
+      border: none;
+      background: var(--pink);
+      color: white;
+      padding: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .cat-card button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* =========================================================
+       ACHIEVEMENTS
+    ========================================================= */
+
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 12px;
+    }
+
+    .achievement {
+      padding: 15px;
+      background: white;
+      border-radius: 18px;
+      border: 2px solid transparent;
+    }
+
+    .achievement.unlocked {
+      border-color: #e7c76e;
+      background: #fffdf2;
+    }
+
+    .achievement.locked {
+      opacity: 0.45;
+      filter: grayscale(0.7);
+    }
+
+    .achievement-icon {
+      font-size: 2rem;
+    }
+
+    .achievement-name {
+      font-weight: 1000;
+      margin-top: 5px;
+    }
+
+    .achievement-description {
+      font-size: 0.78rem;
+      opacity: 0.65;
+      margin-top: 3px;
+    }
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    #toastContainer {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 300;
+
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #40333c;
+      color: white;
+
+      padding: 12px 17px;
+      border-radius: 15px;
+
+      font-weight: 800;
+      font-size: 0.9rem;
+
+      box-shadow: var(--shadow);
+
+      animation:
+        toastIn 0.25s ease-out,
+        toastOut 0.4s ease-in 3.1s forwards;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes toastOut {
+      to {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+    }
+
+    /* =========================================================
+       EVENT
+    ========================================================= */
+
+    .event-banner {
+      position: fixed;
+      top: 75px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150px);
+
+      z-index: 80;
+
+      width: min(500px, calc(100% - 30px));
+
+      background: #fff8d9;
+      border: 3px solid #f1d36f;
+      border-radius: 22px;
+
+      padding: 15px 20px;
+      text-align: center;
+
+      box-shadow: var(--shadow);
+
+      transition: transform 0.35s ease;
+    }
+
+    .event-banner.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .event-title {
+      font-size: 1.2rem;
+      font-weight: 1000;
+    }
+
+    .event-description {
+      font-size: 0.85rem;
+      opacity: 0.7;
+      margin: 4px 0 10px;
+    }
+
+    .event-button {
+      border: none;
+      background: #e7b93f;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 900px) {
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .shop {
+        max-height: none;
+      }
+
+      .cat-panel {
+        min-height: 560px;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .top-buttons {
+        justify-content: flex-start;
+      }
+
+      .game-layout {
+        padding: 12px;
+      }
+
+      .cat-panel,
+      .shop {
+        border-radius: 22px;
+      }
+
+      .cat-panel {
+        min-height: 500px;
+        padding: 20px;
+      }
+
+      .version-badge {
+        right: -45px;
+        top: -12px;
+      }
+
+      .title-card {
+        padding: 40px 20px;
+      }
+
+      .modal {
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
+  <!-- =========================================================
+       TITLE SCREEN
+  ========================================================= -->
 
-<!-- =====================================================
-     TITLE SCREEN
-===================================================== -->
+  <section id="titleScreen">
 
-<section id="titleScreen" class="screen">
+    <div class="title-card">
 
-  <div class="title-card">
+      <div class="title-cat">🐱</div>
 
-    <div class="logo">
-      🐱
-    </div>
+      <div class="title-wrap">
+        <h1>CAT CLICKER :3</h1>
+        <span class="version-badge">v26.1</span>
+      </div>
 
-    <h1>
-      Cat Clicker :3
-    </h1>
+      <p class="tagline">
+        The completely unnecessary cat clicking experience.
+      </p>
 
-    <p class="tagline">
-      pet. meow. upgrade. repeat.
-    </p>
-
-    <div class="menu-buttons">
-
-      <button
-        class="primary"
-        id="playBtn">
-        🐾 Start Petting
-      </button>
-
-      <button
-        class="secondary"
-        id="continueBtn">
-        Continue
-      </button>
-
-    </div>
-
-    <div class="save-note">
-      Your progress saves automatically in this browser.
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-     GAME
-===================================================== -->
-
-<section id="gameScreen" class="game hidden">
-
-  <header class="topbar">
-
-    <div class="brand">
-      🐾 Cat Clicker <small>:3</small>
-    </div>
-
-    <div class="top-actions">
-
-      <button
-        class="icon-btn"
-        id="catsBtn">
-        🐱 Cats
-      </button>
-
-      <button
-        class="icon-btn"
-        id="achBtn">
-        🏆 Achievements
-      </button>
-
-      <button
-        class="icon-btn"
-        id="resetBtn"
-        title="Reset save">
-        ↻
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <!-- MAIN -->
-
-  <main class="main">
-
-    <div class="score">
-      <span id="score">0</span>
-      meows 🐾
-    </div>
-
-
-    <div class="cat-wrap">
-
-      <button
-        class="cat-button"
-        id="catButton"
-        aria-label="Pet the cat">
-
-        <div
-          class="cat"
-          id="cat">
-          🐱
-        </div>
-
-      </button>
-
-    </div>
-
-
-    <div
-      class="cat-name"
-      id="catName">
-      Mochi
-    </div>
-
-
-    <div class="hint">
-      CLICK THE CAT. IT DEMANDS ATTENTION.
-    </div>
-
-
-    <div
-      class="tiny"
-      id="rate">
-      1 meow / click · 0 / sec
-    </div>
-
-  </main>
-
-
-  <!-- SHOP -->
-
-  <aside class="shop">
-
-    <h2>
-      🛒 Silly Shop
-    </h2>
-
-    <div id="upgrades"></div>
-
-
-    <div class="stats">
-
-      <b>Stats</b>
-
-      <br>
-
-      Total meows:
-      <span id="total">
-        0
-      </span>
-
-      <br>
-
-      Total clicks:
-      <span id="clicks">
-        0
-      </span>
-
-      <br>
-
-      Best combo:
-      <span id="bestCombo">
-        0
-      </span>
-
-      <br>
-
-      Cats owned:
-      <span id="catsOwned">
-        1
-      </span>
-
-    </div>
-
-  </aside>
-
-</section>
-
-
-<!-- =====================================================
-     MODAL
-===================================================== -->
-
-<div
-  id="modal"
-  class="modal hidden">
-
-  <div class="modal-card">
-
-    <div class="modal-head">
-
-      <h2 id="modalTitle">
-        Cats
-      </h2>
-
-      <button
-        class="close"
-        id="closeModal">
-        ✕
-      </button>
-
-    </div>
-
-    <div id="modalBody"></div>
-
-  </div>
-
-</div>
-
-
-<!-- TOAST -->
-
-<div
-  class="toast"
-  id="toast">
-</div>
-
-
-<!-- CAT SOUND -->
-
-<audio
-  id="clickSound"
-  src="clicksfx.mp3"
-  preload="auto">
-</audio>
-
-
-<script>
-
-/* =====================================================
-   CATS
-===================================================== */
-
-const cats = [
-
-  {
-    id: "mochi",
-    name: "Mochi",
-    emoji: "🐱",
-    color: "#f3a7c7",
-    desc: "Just a lil guy."
-  },
-
-  {
-    id: "void",
-    name: "The Void",
-    emoji: "🐈‍⬛",
-    color: "#81718d",
-    desc: "Stares into your soul."
-  },
-
-  {
-    id: "cheddar",
-    name: "Cheddar",
-    emoji: "🐈",
-    color: "#f4ae64",
-    desc: "Has one brain cell."
-  },
-
-  {
-    id: "bob",
-    name: "B O B",
-    emoji: "😺",
-    color: "#aee3d0",
-    desc: "No thoughts. Only snacks."
-  },
-
-  {
-    id: "wizard",
-    name: "Meowgician",
-    emoji: "😸",
-    color: "#b8a5ef",
-    desc: "Knows forbidden meowledge."
-  },
-
-  {
-    id: "space",
-    name: "Cosmocat",
-    emoji: "😽",
-    color: "#8fc5f0",
-    desc: "Has seen the moon."
-  }
-
-];
-
-
-/* =====================================================
-   UPGRADES
-===================================================== */
-
-const upgradeDefs = [
-
-  {
-    id: "paws",
-    icon: "🐾",
-    name: "Bigger Paws",
-    desc: "+1 meow / click",
-    base: 25,
-    click: 1
-  },
-
-  {
-    id: "fish",
-    icon: "🐟",
-    name: "Suspicious Fish",
-    desc: "+5 meows / click",
-    base: 100,
-    click: 5
-  },
-
-  {
-    id: "yarn",
-    icon: "🧶",
-    name: "Infinite Yarn",
-    desc: "+2 meows / sec",
-    base: 250,
-    sec: 2
-  },
-
-  {
-    id: "laser",
-    icon: "🔴",
-    name: "Illegal Laser Pointer",
-    desc: "+15 meows / click",
-    base: 800,
-    click: 15
-  },
-
-  {
-    id: "box",
-    icon: "📦",
-    name: "Premium Cardboard Box",
-    desc: "+10 meows / sec",
-    base: 2000,
-    sec: 10
-  },
-
-  {
-    id: "crown",
-    icon: "👑",
-    name: "Royal Bean Crown",
-    desc: "+100 meows / click",
-    base: 10000,
-    click: 100
-  }
-
-];
-
-
-/* =====================================================
-   ACHIEVEMENTS
-===================================================== */
-
-const achievementDefs = [
-
-  {
-    id: "first",
-    name: "First Meow",
-    desc: "Get your first meow.",
-    check: s => s.clicks >= 1
-  },
-
-  {
-    id: "petter",
-    name: "Professional Cat Petter",
-    desc: "Click 100 times.",
-    check: s => s.clicks >= 100
-  },
-
-  {
-    id: "thousand",
-    name: "Meow-nopoly",
-    desc: "Earn 1,000 total meows.",
-    check: s => s.total >= 1000
-  },
-
-  {
-    id: "rich",
-    name: "Catillionaire",
-    desc: "Earn 100,000 total meows.",
-    check: s => s.total >= 100000
-  },
-
-  {
-    id: "shopaholic",
-    name: "No Financial Responsibility",
-    desc: "Buy 10 upgrades.",
-    check: s => s.upgradesBought >= 10
-  },
-
-  {
-    id: "zoomies",
-    name: "ZOOMIES",
-    desc: "Reach 50 meows per click.",
-    check: s => s.perClick >= 50
-  },
-
-  {
-    id: "collector",
-    name: "Cat Collector",
-    desc: "Unlock 4 cats.",
-    check: s => s.unlockedCats.length >= 4
-  },
-
-  {
-    id: "fullhouse",
-    name: "Cat House Full",
-    desc: "Unlock every cat.",
-    check: s => s.unlockedCats.length === cats.length
-  }
-
-];
-
-
-/* =====================================================
-   GAME STATE
-===================================================== */
-
-let state = {
-
-  meows: 0,
-
-  total: 0,
-
-  clicks: 0,
-
-  perClick: 1,
-
-  perSecond: 0,
-
-  upgradesBought: 0,
-
-  bestCombo: 0,
-
-  combo: 0,
-
-  unlockedCats: [
-    "mochi"
-  ],
-
-  selectedCat: "mochi",
-
-  ownedUpgrades: {},
-
-  achievements: []
-
-};
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const score =
-  document.getElementById("score");
-
-const clickCount =
-  document.getElementById("clicks");
-
-const perClickEl =
-  document.getElementById("perClick");
-
-const perSecondEl =
-  document.getElementById("perSecond");
-
-const catButton =
-  document.getElementById("catButton");
-
-const sound =
-  document.getElementById("clickSound");
-
-
-/* =====================================================
-   SAVE SYSTEM
-===================================================== */
-
-function saveGame() {
-
-  localStorage.setItem(
-    "catClickerSave",
-    JSON.stringify(state)
-  );
-
-}
-
-
-function loadGame() {
-
-  try {
-
-    const save =
-      localStorage.getItem(
-        "catClickerSave"
-      );
-
-    if (!save) return;
-
-    const data =
-      JSON.parse(save);
-
-    state = {
-      ...state,
-      ...data
-    };
-
-  }
-
-  catch (error) {
-
-    console.warn(
-      "Save file could not be loaded.",
-      error
-    );
-
-  }
-
-}
-
-
-function hasSave() {
-
-  return !!localStorage.getItem(
-    "catClickerSave"
-  );
-
-}
-
-
-/* =====================================================
-   UPGRADE COST
-===================================================== */
-
-function getUpgradeCost(upgrade) {
-
-  const amount =
-    state.ownedUpgrades[upgrade.id] || 0;
-
-  return Math.ceil(
-    upgrade.base *
-    Math.pow(1.55, amount)
-  );
-
-}
-
-
-/* =====================================================
-   UPDATE EVERYTHING
-===================================================== */
-
-function update() {
-
-  score.textContent =
-    Math.floor(state.meows)
-      .toLocaleString();
-
-  clickCount.textContent =
-    state.clicks.toLocaleString();
-
-  document.getElementById(
-    "total"
-  ).textContent =
-    Math.floor(state.total)
-      .toLocaleString();
-
-  document.getElementById(
-    "bestCombo"
-  ).textContent =
-    state.bestCombo;
-
-  document.getElementById(
-    "catsOwned"
-  ).textContent =
-    state.unlockedCats.length;
-
-  document.getElementById(
-    "rate"
-  ).textContent =
-    `${state.perClick} meow / click · ${state.perSecond} / sec`;
-
-
-  /* Current cat */
-
-  const currentCat =
-    cats.find(
-      cat => cat.id === state.selectedCat
-    ) || cats[0];
-
-  const catElement =
-    document.getElementById("cat");
-
-  catElement.textContent =
-    currentCat.emoji;
-
-  catElement.style.setProperty(
-    "--cat",
-    currentCat.color
-  );
-
-  document.getElementById(
-    "catName"
-  ).textContent =
-    currentCat.name;
-
-
-  renderUpgrades();
-
-  checkAchievements();
-
-  saveGame();
-
-}
-
-
-/* =====================================================
-   RENDER UPGRADES
-===================================================== */
-
-function renderUpgrades() {
-
-  const container =
-    document.getElementById(
-      "upgrades"
-    );
-
-  container.innerHTML =
-    upgradeDefs.map(upgrade => {
-
-      const cost =
-        getUpgradeCost(upgrade);
-
-      const disabled =
-        state.meows < cost;
-
-      const amount =
-        state.ownedUpgrades[
-          upgrade.id
-        ] || 0;
-
-      return `
+      <div class="title-buttons">
 
         <button
-          class="upgrade"
-          data-upgrade="${upgrade.id}"
-          ${disabled ? "disabled" : ""}>
-
-          <div class="upgrade-title">
-
-            ${upgrade.icon}
-            ${upgrade.name}
-
-          </div>
-
-          <div class="upgrade-info">
-
-            <span>
-              ${upgrade.desc}
-              ${amount > 0 ? ` · Lv.${amount}` : ""}
-            </span>
-
-            <strong>
-              ${cost.toLocaleString()} 🐾
-            </strong>
-
-          </div>
-
+          id="startButton"
+          class="main-button start-button"
+        >
+          🐾 START PETTING
         </button>
 
-      `;
+        <button
+          id="continueButton"
+          class="main-button continue-button hidden"
+        >
+          💾 CONTINUE
+        </button>
 
-    }).join("");
+      </div>
 
+      <div class="save-note">
+        Your progress is saved automatically in your browser.
+      </div>
 
-  document
-    .querySelectorAll(".upgrade")
-    .forEach(button => {
+    </div>
 
-      button.onclick = () => {
+  </section>
 
-        buyUpgrade(
-          button.dataset.upgrade
-        );
 
-      };
+  <!-- =========================================================
+       GAME SCREEN
+  ========================================================= -->
 
-    });
+  <section id="gameScreen" class="hidden">
 
-}
+    <header class="topbar">
 
+      <div class="brand">
+        🐱 Cat Clicker <span style="opacity:.5;">v26.1</span>
+      </div>
 
-/* =====================================================
-   BUY UPGRADE
-===================================================== */
+      <div class="top-buttons">
 
-function buyUpgrade(id) {
+        <button
+          id="catsButton"
+          class="small-button"
+        >
+          🐱 Cats
+        </button>
 
-  const upgrade =
-    upgradeDefs.find(
-      u => u.id === id
-    );
+        <button
+          id="achievementsButton"
+          class="small-button"
+        >
+          🏆 Achievements
+        </button>
 
-  if (!upgrade) return;
+        <button
+          id="resetButton"
+          class="small-button"
+        >
+          🗑️ Reset
+        </button>
 
-  const cost =
-    getUpgradeCost(upgrade);
+      </div>
 
-  if (state.meows < cost)
-    return;
+    </header>
 
 
-  state.meows -= cost;
+    <main class="game-layout">
 
+      <!-- CAT -->
 
-  state.ownedUpgrades[id] =
-    (state.ownedUpgrades[id] || 0) + 1;
+      <section
+        id="catPanel"
+        class="cat-panel"
+      >
 
-  state.upgradesBought++;
+        <div class="combo-display" id="comboDisplay">
+          🔥 COMBO x1
+        </div>
 
+        <div class="score-label">
+          MEOWS
+        </div>
 
-  if (upgrade.click) {
+        <div id="score">
+          0
+        </div>
 
-    state.perClick +=
-      upgrade.click;
+        <div id="rate" class="rate">
+          +1 per click • +0/sec
+        </div>
 
-  }
+        <button
+          id="catButton"
+          class="cat-button"
+          aria-label="Pet cat"
+        >
+          <div id="cat" class="cat">
+            🐱
+          </div>
+        </button>
 
+        <div id="catName" class="cat-name">
+          Mochi
+        </div>
 
-  if (upgrade.sec) {
+        <div id="catHint" class="cat-hint">
+          Just a lil guy.
+        </div>
 
-    state.perSecond +=
-      upgrade.sec;
+      </section>
 
-  }
 
+      <!-- SHOP -->
 
-  toast(
-    `${upgrade.icon} ${upgrade.name} acquired!`
-  );
+      <aside class="shop">
 
+        <h2>🛒 Cat Shop</h2>
 
-  update();
+        <div class="shop-subtitle">
+          Spend your completely responsible money.
+        </div>
 
-}
+        <div
+          id="upgradeList"
+          class="upgrade-list"
+        ></div>
 
+      </aside>
 
-/* =====================================================
-   CAT CLICK
-===================================================== */
+    </main>
 
-let comboTimer;
+  </section>
 
-catButton.addEventListener(
-  "click",
-  event => {
 
-    state.meows +=
-      state.perClick;
+  <!-- =========================================================
+       CAT MODAL
+  ========================================================= -->
 
-    state.total +=
-      state.perClick;
+  <div
+    id="catsModal"
+    class="modal-backdrop hidden"
+  >
 
-    state.clicks++;
+    <div class="modal">
 
+      <div class="modal-header">
 
-    /* Combo */
+        <h2>
+          🐱 Cat Collection
+        </h2>
 
-    state.combo++;
+        <button
+          class="close-button"
+          data-close="catsModal"
+        >
+          ✕
+        </button>
 
-    state.bestCombo =
-      Math.max(
-        state.bestCombo,
-        state.combo
-      );
+      </div>
 
-    clearTimeout(comboTimer);
+      <div
+        id="catGrid"
+        class="cat-grid"
+      ></div>
 
-    comboTimer =
-      setTimeout(() => {
+    </div>
 
-        state.combo = 0;
+  </div>
 
-      }, 1200);
 
+  <!-- =========================================================
+       ACHIEVEMENT MODAL
+  ========================================================= -->
 
-    /* Sound */
+  <div
+    id="achievementsModal"
+    class="modal-backdrop hidden"
+  >
 
-    sound.currentTime = 0;
+    <div class="modal">
 
-    sound
-      .play()
-      .catch(() => {});
+      <div class="modal-header">
 
+        <h2>
+          🏆 Achievements
+        </h2>
 
-    /* Animation */
+        <button
+          class="close-button"
+          data-close="achievementsModal"
+        >
+          ✕
+        </button>
 
-    const cat =
-      document.getElementById("cat");
+      </div>
 
-    cat.classList.remove("bounce");
+      <div
+        id="achievementGrid"
+        class="achievement-grid"
+      ></div>
 
-    void cat.offsetWidth;
+    </div>
 
-    cat.classList.add("bounce");
+  </div>
 
 
-    /* Floating number */
+  <!-- =========================================================
+       RANDOM EVENT
+  ========================================================= -->
 
-    floatText(
-      "+" + state.perClick,
-      event.clientX - 20,
-      event.clientY - 20
-    );
+  <div
+    id="eventBanner"
+    class="event-banner"
+  >
 
+    <div
+      id="eventTitle"
+      class="event-title"
+    >
+      🎲 RANDOM EVENT
+    </div>
 
-    /* Combo messages */
+    <div
+      id="eventDescription"
+      class="event-description"
+    >
+      Something happened.
+    </div>
 
-    if (
-      state.combo > 0 &&
-      state.combo % 25 === 0
-    ) {
+    <button
+      id="eventButton"
+      class="event-button"
+    >
+      DO IT
+    </button>
 
-      toast(
-        `🔥 ${state.combo} click combo!`
-      );
+  </div>
 
-    }
 
+  <!-- TOASTS -->
 
-    update();
+  <div id="toastContainer"></div>
 
-  }
-);
 
+  <!-- AUDIO -->
 
-/* =====================================================
-   FLOATING TEXT
-===================================================== */
+  <audio
+    id="clickSound"
+    src="clicksfx.mp3"
+    preload="auto"
+  ></audio>
 
-function floatText(
-  text,
-  x,
-  y
-) {
 
-  const element =
-    document.createElement("div");
+  <script>
 
-  element.className =
-    "float";
+    /* =========================================================
+       CONSTANTS
+    ========================================================= */
 
-  element.textContent =
-    text;
+    const SAVE_KEY = "catClickerSave";
+    const SAVE_VERSION = 2;
 
-  element.style.left =
-    x + "px";
+    const VERSION = "v26.1";
 
-  element.style.top =
-    y + "px";
 
-  document.body.appendChild(
-    element
-  );
-
-  setTimeout(
-    () => element.remove(),
-    800
-  );
-
-}
-
-
-/* =====================================================
-   ACHIEVEMENTS
-===================================================== */
-
-function checkAchievements() {
-
-  achievementDefs.forEach(
-    achievement => {
-
-      if (
-        !state.achievements.includes(
-          achievement.id
-        ) &&
-        achievement.check(state)
-      ) {
-
-        state.achievements.push(
-          achievement.id
-        );
-
-        toast(
-          "🏆 Achievement: " +
-          achievement.name
-        );
-
+    /* =========================================================
+       CATS
+    ========================================================= */
+
+    const cats = [
+
+      {
+        id: "mochi",
+        name: "Mochi",
+        emoji: "🐱",
+        color: "#f3a7c7",
+        desc: "Just a lil guy.",
+        price: 0
+      },
+
+      {
+        id: "void",
+        name: "The Void",
+        emoji: "🐈‍⬛",
+        color: "#81718d",
+        desc: "Stares into your soul.",
+        price: 500
+      },
+
+      {
+        id: "cheddar",
+        name: "Cheddar",
+        emoji: "🐈",
+        color: "#f4ae64",
+        desc: "Has one brain cell.",
+        price: 2000
+      },
+
+      {
+        id: "bob",
+        name: "B O B",
+        emoji: "😺",
+        color: "#aee3d0",
+        desc: "No thoughts. Only snacks.",
+        price: 5000
+      },
+
+      {
+        id: "wizard",
+        name: "Meowgician",
+        emoji: "😸",
+        color: "#b8a5ef",
+        desc: "Knows forbidden meowledge.",
+        price: 15000
+      },
+
+      {
+        id: "space",
+        name: "Cosmocat",
+        emoji: "😽",
+        color: "#8fc5f0",
+        desc: "Has seen the moon.",
+        price: 40000
+      },
+
+      {
+        id: "potato",
+        name: "Potato Cat",
+        emoji: "🥔",
+        color: "#d9bd91",
+        desc: "Technically not a cat.",
+        price: 100000
+      },
+
+      {
+        id: "business",
+        name: "Business Cat",
+        emoji: "😼",
+        color: "#7894a8",
+        desc: "He has a meeting at 3.",
+        price: 250000
+      },
+
+      {
+        id: "shark",
+        name: "Shark Cat",
+        emoji: "🦈",
+        color: "#83c8df",
+        desc: "The fish fears him.",
+        price: 600000
+      },
+
+      {
+        id: "bee",
+        name: "Bee Cat",
+        emoji: "🐝",
+        color: "#f4d75c",
+        desc: "Buzzes aggressively.",
+        price: 1500000
+      },
+
+      {
+        id: "king",
+        name: "King Cat",
+        emoji: "👑",
+        color: "#f1c75b",
+        desc: "Demands more tuna.",
+        price: 4000000
+      },
+
+      {
+        id: "vampire",
+        name: "Vampurr",
+        emoji: "🧛",
+        color: "#9e79b5",
+        desc: "Drinks tomato soup.",
+        price: 10000000
+      },
+
+      {
+        id: "robot",
+        name: "Robo-Cat",
+        emoji: "🤖",
+        color: "#9ca9b2",
+        desc: "01001101 01000101 01001111 01010111.",
+        price: 25000000
+      },
+
+      {
+        id: "alien",
+        name: "Alien Cat",
+        emoji: "👽",
+        color: "#91db8d",
+        desc: "Definitely not spying on you.",
+        price: 75000000
+      },
+
+      {
+        id: "ninja",
+        name: "Ninja Cat",
+        emoji: "🥷",
+        color: "#6d7287",
+        desc: "You didn't see anything.",
+        price: 200000000
+      },
+
+      {
+        id: "fancy",
+        name: "Fancy Cat",
+        emoji: "🎩",
+        color: "#d7b1dc",
+        desc: "Has never touched grass.",
+        price: 500000000
+      },
+
+      {
+        id: "rainbow",
+        name: "Rainbow Cat",
+        emoji: "🌈",
+        color: "#f1a5c8",
+        desc: "Violates several laws of physics.",
+        price: 2000000000
+      },
+
+      {
+        id: "hell",
+        name: "Hellcat",
+        emoji: "😈",
+        color: "#e46d6d",
+        desc: "Probably shouldn't have clicked 666 times.",
+        price: 10000000000
+      },
+
+      {
+        id: "galaxy",
+        name: "Galaxy Cat",
+        emoji: "🌌",
+        color: "#8f88d7",
+        desc: "Contains approximately 14 galaxies.",
+        price: 100000000000
+      },
+
+      {
+        id: "godcat",
+        name: "CAT",
+        emoji: "🐱",
+        color: "#fff0a6",
+        desc: "You have reached CAT.",
+        price: 1000000000000
       }
 
-    }
-  );
-
-}
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-function toast(message) {
-
-  const element =
-    document.getElementById(
-      "toast"
-    );
-
-  element.textContent =
-    message;
-
-  element.classList.add(
-    "show"
-  );
-
-  clearTimeout(
-    window.toastTimer
-  );
-
-  window.toastTimer =
-    setTimeout(() => {
-
-      element.classList.remove(
-        "show"
-      );
-
-    }, 2200);
-
-}
-
-
-/* =====================================================
-   MODALS
-===================================================== */
-
-function openModal(
-  title,
-  content
-) {
-
-  document.getElementById(
-    "modalTitle"
-  ).textContent =
-    title;
-
-  document.getElementById(
-    "modalBody"
-  ).innerHTML =
-    content;
-
-  document.getElementById(
-    "modal"
-  ).classList.remove(
-    "hidden"
-  );
-
-}
-
-
-/* =====================================================
-   CAT COLLECTION
-===================================================== */
-
-function openCats() {
-
-  const content = `
-
-    <p>
-      Unlock cats with meows and give
-      your game a little more ✨ personality ✨.
-    </p>
-
-    <div class="cats">
-
-      ${cats.map(
-        (cat, index) => {
-
-          const unlocked =
-            state.unlockedCats.includes(
-              cat.id
-            );
-
-          /*
-             Increasing unlock prices:
-             0, 500, 2000, 4500...
-          */
-
-          const price =
-            index === 0
-              ? 0
-              : 500 * index * index;
-
-
-          return `
-
-            <button
-              class="cat-choice
-              ${state.selectedCat === cat.id
-                ? "selected"
-                : ""}"
-
-              data-cat="${cat.id}"
-
-              ${(
-                !unlocked &&
-                state.meows < price
-              )
-                ? "disabled"
-                : ""}>
-
-              <div class="mini-cat">
-                ${cat.emoji}
-              </div>
-
-              <b>
-                ${cat.name}
-              </b>
-
-              <small>
-
-                ${
-                  unlocked
-                    ? "Unlocked!"
-                    : price.toLocaleString()
-                      + " 🐾"
-                }
-
-              </small>
-
-              <br>
-
-              <small>
-                ${cat.desc}
-              </small>
-
-            </button>
-
-          `;
-
-        }
-      ).join("")}
-
-    </div>
-
-  `;
-
-
-  openModal(
-    "🐱 Cat Collection",
-    content
-  );
-
-
-  document
-    .querySelectorAll(".cat-choice")
-    .forEach(button => {
-
-      button.onclick = () => {
-
-        selectCat(
-          button.dataset.cat
-        );
-
-      };
-
-    });
-
-}
-
-
-/* =====================================================
-   SELECT CAT
-===================================================== */
-
-function selectCat(id) {
-
-  const index =
-    cats.findIndex(
-      cat => cat.id === id
-    );
-
-  if (index === -1)
-    return;
-
-
-  const unlocked =
-    state.unlockedCats.includes(id);
-
-
-  const price =
-    index === 0
-      ? 0
-      : 500 * index * index;
-
-
-  if (!unlocked) {
-
-    if (state.meows < price)
-      return;
-
-    state.meows -= price;
-
-    state.unlockedCats.push(
-      id
-    );
-
-    toast(
-      "🐱 New cat unlocked!"
-    );
-
-  }
-
-
-  state.selectedCat =
-    id;
-
-
-  openCats();
-
-  update();
-
-}
-
-
-/* =====================================================
-   ACHIEVEMENT WINDOW
-===================================================== */
-
-function openAchievements() {
-
-  const content = `
-
-    <p>
-      ${
-        state.achievements.length
-      }/${achievementDefs.length}
-      unlocked
-    </p>
-
-    <div class="achievements">
-
-      ${achievementDefs.map(
-        achievement => {
-
-          const unlocked =
-            state.achievements.includes(
-              achievement.id
-            );
-
-          return `
-
-            <div
-              class="
-                achievement
-                ${unlocked ? "" : "locked"}
-              ">
-
-              <b>
-
-                ${
-                  unlocked
-                    ? "🏆"
-                    : "🔒"
-                }
-
-                ${achievement.name}
-
-              </b>
-
-              <small>
-                ${achievement.desc}
-              </small>
-
-            </div>
-
-          `;
-
-        }
-      ).join("")}
-
-    </div>
-
-  `;
-
-
-  openModal(
-    "🏆 Achievements",
-    content
-  );
-
-}
-
-
-/* =====================================================
-   START / CONTINUE
-===================================================== */
-
-function startGame() {
-
-  document
-    .getElementById("titleScreen")
-    .classList.add("hidden");
-
-  document
-    .getElementById("gameScreen")
-    .classList.remove("hidden");
-
-  update();
-
-}
-
-
-document
-  .getElementById("playBtn")
-  .onclick = () => {
-
-    /*
-       Start fresh ONLY if there isn't
-       already a save.
-    */
-
-    if (!hasSave()) {
-
-      state = {
-
-        meows: 0,
-        total: 0,
-        clicks: 0,
-
-        perClick: 1,
-        perSecond: 0,
-
-        upgradesBought: 0,
-
-        bestCombo: 0,
-        combo: 0,
-
-        unlockedCats: [
-          "mochi"
-        ],
-
-        selectedCat: "mochi",
-
-        ownedUpgrades: {},
-
-        achievements: []
-
-      };
-
-    }
-    else {
-
-      loadGame();
-
-    }
-
-    startGame();
-
-  };
-
-
-document
-  .getElementById("continueBtn")
-  .onclick = () => {
-
-    loadGame();
-
-    startGame();
-
-  };
-
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-document
-  .getElementById("catsBtn")
-  .onclick =
-  openCats;
-
-
-document
-  .getElementById("achBtn")
-  .onclick =
-  openAchievements;
-
-
-document
-  .getElementById("closeModal")
-  .onclick = () => {
-
-    document
-      .getElementById("modal")
-      .classList.add("hidden");
-
-  };
-
-
-document
-  .getElementById("modal")
-  .onclick = event => {
-
-    if (
-      event.target ===
-      document.getElementById("modal")
-    ) {
-
-      document
-        .getElementById("modal")
-        .classList.add("hidden");
-
-    }
-
-  };
-
-
-/* =====================================================
-   RESET SAVE
-===================================================== */
-
-document
-  .getElementById("resetBtn")
-  .onclick = () => {
-
-    const confirmed =
-      confirm(
-        "Reset all Cat Clicker progress?"
-      );
-
-    if (!confirmed)
-      return;
-
-
-    localStorage.removeItem(
-      "catClickerSave"
-    );
-
-
-    state = {
+    ];
+
+
+    /* =========================================================
+       UPGRADES
+    ========================================================= */
+
+    const upgrades = [
+
+      {
+        id: "paws",
+        name: "Bigger Paws",
+        emoji: "🐾",
+        description: "+1 meow per click",
+        type: "click",
+        amount: 1,
+        base: 25
+      },
+
+      {
+        id: "fish",
+        name: "Suspicious Fish",
+        emoji: "🐟",
+        description: "+5 meows per click",
+        type: "click",
+        amount: 5,
+        base: 100
+      },
+
+      {
+        id: "yarn",
+        name: "Infinite Yarn",
+        emoji: "🧶",
+        description: "+2 meows per second",
+        type: "second",
+        amount: 2,
+        base: 250
+      },
+
+      {
+        id: "laser",
+        name: "Illegal Laser Pointer",
+        emoji: "🔴",
+        description: "+15 meows per click",
+        type: "click",
+        amount: 15,
+        base: 800
+      },
+
+      {
+        id: "box",
+        name: "Premium Cardboard Box",
+        emoji: "📦",
+        description: "+10 meows per second",
+        type: "second",
+        amount: 10,
+        base: 2000
+      },
+
+      {
+        id: "bean",
+        name: "Royal Bean Crown",
+        emoji: "👑",
+        description: "+100 meows per click",
+        type: "click",
+        amount: 100,
+        base: 10000
+      },
+
+      {
+        id: "factory",
+        name: "Catnip Factory",
+        emoji: "🏭",
+        description: "+100 meows per second",
+        type: "second",
+        amount: 100,
+        base: 50000
+      },
+
+      {
+        id: "butler",
+        name: "Professional Cat Butler",
+        emoji: "🧑‍💼",
+        description: "+250 meows per second",
+        type: "second",
+        amount: 250,
+        base: 150000
+      },
+
+      {
+        id: "sushi",
+        name: "Suspicious Sushi",
+        emoji: "🍣",
+        description: "+500 meows per click",
+        type: "click",
+        amount: 500,
+        base: 500000
+      },
+
+      {
+        id: "cannon",
+        name: "Fish Cannon",
+        emoji: "💥",
+        description: "+1,500 meows per click",
+        type: "click",
+        amount: 1500,
+        base: 1500000
+      },
+
+      {
+        id: "yarnfactory",
+        name: "Industrial Yarn Factory",
+        emoji: "🏗️",
+        description: "+2,500 meows per second",
+        type: "second",
+        amount: 2500,
+        base: 5000000
+      },
+
+      {
+        id: "amazon",
+        name: "Amazon Cardboard Subscription",
+        emoji: "📦",
+        description: "+10,000 meows per second",
+        type: "second",
+        amount: 10000,
+        base: 25000000
+      },
+
+      {
+        id: "magic",
+        name: "Forbidden Meow Magic",
+        emoji: "🪄",
+        description: "+10,000 meows per click",
+        type: "click",
+        amount: 10000,
+        base: 100000000
+      },
+
+      {
+        id: "couch",
+        name: "Infinite Couch",
+        emoji: "🛋️",
+        description: "+50,000 meows per second",
+        type: "second",
+        amount: 50000,
+        base: 500000000
+      },
+
+      {
+        id: "moon",
+        name: "Moon Cheese Mining",
+        emoji: "🌙",
+        description: "+250,000 meows per second",
+        type: "second",
+        amount: 250000,
+        base: 2000000000
+      },
+
+      {
+        id: "laser2",
+        name: "Orbital Laser Pointer",
+        emoji: "🛰️",
+        description: "+500,000 meows per click",
+        type: "click",
+        amount: 500000,
+        base: 10000000000
+      },
+
+      {
+        id: "dimension",
+        name: "Cat Dimension",
+        emoji: "🌀",
+        description: "+2,500,000 meows per second",
+        type: "second",
+        amount: 2500000,
+        base: 50000000000
+      },
+
+      {
+        id: "galaxyfactory",
+        name: "Galactic Cat Factory",
+        emoji: "🌌",
+        description: "+10,000,000 meows per second",
+        type: "second",
+        amount: 10000000,
+        base: 250000000000
+      },
+
+      {
+        id: "reality",
+        name: "Reality Manipulator",
+        emoji: "✨",
+        description: "+5,000,000 meows per click",
+        type: "click",
+        amount: 5000000,
+        base: 1000000000000
+      },
+
+      {
+        id: "catgod",
+        name: "THE CAT GOD",
+        emoji: "🐱",
+        description: "+100,000,000 meows per second",
+        type: "second",
+        amount: 100000000,
+        base: 10000000000000
+      }
+
+    ];
+
+
+    /* =========================================================
+       ACHIEVEMENTS
+    ========================================================= */
+
+    const achievements = [
+
+      {
+        id: "first",
+        icon: "🐾",
+        name: "First Meow",
+        description: "Click the cat once.",
+        check: s => s.clicks >= 1
+      },
+
+      {
+        id: "ten",
+        icon: "🐾",
+        name: "Getting Started",
+        description: "Click 10 times.",
+        check: s => s.clicks >= 10
+      },
+
+      {
+        id: "hundred",
+        icon: "🐱",
+        name: "Professional Cat Petter",
+        description: "Click 100 times.",
+        check: s => s.clicks >= 100
+      },
+
+      {
+        id: "thousand",
+        icon: "🔥",
+        name: "Finger Workout",
+        description: "Click 1,000 times.",
+        check: s => s.clicks >= 1000
+      },
+
+      {
+        id: "tenkclicks",
+        icon: "💪",
+        name: "Carpal Tunnel Enjoyer",
+        description: "Click 10,000 times.",
+        check: s => s.clicks >= 10000
+      },
+
+      {
+        id: "millionclicks",
+        icon: "💀",
+        name: "Please Stop",
+        description: "Click 1,000,000 times.",
+        check: s => s.clicks >= 1000000
+      },
+
+      {
+        id: "thousandmeows",
+        icon: "💰",
+        name: "Meow-nopoly",
+        description: "Earn 1,000 total meows.",
+        check: s => s.total >= 1000
+      },
+
+      {
+        id: "million",
+        icon: "💰",
+        name: "Meow-nionaire",
+        description: "Earn 1,000,000 total meows.",
+        check: s => s.total >= 1000000
+      },
+
+      {
+        id: "billion",
+        icon: "💎",
+        name: "Cat Billionaire",
+        description: "Earn 1 billion total meows.",
+        check: s => s.total >= 1000000000
+      },
+
+      {
+        id: "trillion",
+        icon: "🌌",
+        name: "Cat Trillionaire",
+        description: "Earn 1 trillion total meows.",
+        check: s => s.total >= 1000000000000
+      },
+
+      {
+        id: "upgrades10",
+        icon: "🛒",
+        name: "No Financial Responsibility",
+        description: "Buy 10 upgrades.",
+        check: s => s.upgradesBought >= 10
+      },
+
+      {
+        id: "upgrades50",
+        icon: "🛒",
+        name: "Shopaholic",
+        description: "Buy 50 upgrades.",
+        check: s => s.upgradesBought >= 50
+      },
+
+      {
+        id: "upgrades100",
+        icon: "🏪",
+        name: "The Shop Owns You",
+        description: "Buy 100 upgrades.",
+        check: s => s.upgradesBought >= 100
+      },
+
+      {
+        id: "clickpower",
+        icon: "💥",
+        name: "ZOOMIES",
+        description: "Reach 50 meows per click.",
+        check: s => s.perClick >= 50
+      },
+
+      {
+        id: "clickpower1000",
+        icon: "⚡",
+        name: "Finger Cannon",
+        description: "Reach 1,000 meows per click.",
+        check: s => s.perClick >= 1000
+      },
+
+      {
+        id: "passive",
+        icon: "⏱️",
+        name: "Lazy Cat",
+        description: "Reach 100 meows per second.",
+        check: s => s.perSecond >= 100
+      },
+
+      {
+        id: "passive100k",
+        icon: "🏭",
+        name: "Industrialized Cats",
+        description: "Reach 100,000 meows per second.",
+        check: s => s.perSecond >= 100000
+      },
+
+      {
+        id: "collector",
+        icon: "🐱",
+        name: "Cat Collector",
+        description: "Unlock 5 cats.",
+        check: s => s.unlockedCats.length >= 5
+      },
+
+      {
+        id: "collector10",
+        icon: "🐱",
+        name: "Cat Hoarder",
+        description: "Unlock 10 cats.",
+        check: s => s.unlockedCats.length >= 10
+      },
+
+      {
+        id: "allcats",
+        icon: "👑",
+        name: "Cat House Full",
+        description: "Unlock every cat.",
+        check: s => s.unlockedCats.length === cats.length
+      },
+
+      {
+        id: "combo10",
+        icon: "🔥",
+        name: "Warm Paws",
+        description: "Reach a x10 combo.",
+        check: s => s.bestCombo >= 10
+      },
+
+      {
+        id: "combo25",
+        icon: "🔥",
+        name: "MEGA MEOW",
+        description: "Reach a x25 combo.",
+        check: s => s.bestCombo >= 25
+      },
+
+      {
+        id: "combo50",
+        icon: "🔥",
+        name: "ULTRA MEOW",
+        description: "Reach a x50 combo.",
+        check: s => s.bestCombo >= 50
+      },
+
+      {
+        id: "combo100",
+        icon: "💥",
+        name: "CATACLYSM",
+        description: "Reach a x100 combo.",
+        check: s => s.bestCombo >= 100
+      },
+
+      {
+        id: "combo500",
+        icon: "☄️",
+        name: "WHY",
+        description: "Reach a x500 combo.",
+        check: s => s.bestCombo >= 500
+      },
+
+      {
+        id: "event1",
+        icon: "🎲",
+        name: "Unexpected",
+        description: "Experience your first random event.",
+        check: s => s.eventsSeen >= 1
+      },
+
+      {
+        id: "events10",
+        icon: "🎲",
+        name: "Chaos Enjoyer",
+        description: "Experience 10 random events.",
+        check: s => s.eventsSeen >= 10
+      },
+
+      {
+        id: "prestige1",
+        icon: "🌟",
+        name: "Reborn",
+        description: "Prestige for the first time.",
+        check: s => s.prestige >= 1
+      },
+
+      {
+        id: "prestige5",
+        icon: "🌟",
+        name: "Cat Soul Collector",
+        description: "Prestige 5 times.",
+        check: s => s.prestige >= 5
+      },
+
+      {
+        id: "prestige10",
+        icon: "🌟",
+        name: "Ascended Cat",
+        description: "Prestige 10 times.",
+        check: s => s.prestige >= 10
+      },
+
+      {
+        id: "prestige25",
+        icon: "🌌",
+        name: "Beyond Cat",
+        description: "Prestige 25 times.",
+        check: s => s.prestige >= 25
+      },
+
+      {
+        id: "secret666",
+        icon: "😈",
+        name: "You Shouldn't Have Done That",
+        description: "Click exactly 666 times.",
+        secret: true,
+        check: s => s.clicks >= 666
+      },
+
+      {
+        id: "secretidle",
+        icon: "😴",
+        name: "Doing Nothing",
+        description: "Don't click for 60 seconds.",
+        secret: true,
+        check: s => s.idleTime >= 60
+      },
+
+      {
+        id: "secretbob",
+        icon: "😺",
+        name: "B O B",
+        description: "Unlock B O B.",
+        secret: true,
+        check: s => s.unlockedCats.includes("bob")
+      },
+
+      {
+        id: "secretbillion",
+        icon: "👀",
+        name: "That's A Lot Of Cats",
+        description: "Earn 100 billion meows.",
+        secret: true,
+        check: s => s.total >= 100000000000
+      },
+
+      {
+        id: "secretcatgod",
+        icon: "🐱",
+        name: "CAT",
+        description: "Reach the final cat.",
+        secret: true,
+        check: s => s.unlockedCats.includes("godcat")
+      },
+
+      {
+        id: "prestige100",
+        icon: "♾️",
+        name: "There Is No Escape",
+        description: "Prestige 100 times.",
+        secret: true,
+        check: s => s.prestige >= 100
+      },
+
+      {
+        id: "millionupgrades",
+        icon: "💀",
+        name: "The Economy Is Broken",
+        description: "Buy 1,000 upgrades.",
+        secret: true,
+        check: s => s.upgradesBought >= 1000
+      },
+
+      {
+        id: "millioncombo",
+        icon: "🔥",
+        name: "THE CAT HAS AWAKENED",
+        description: "Reach a x1,000 combo.",
+        secret: true,
+        check: s => s.bestCombo >= 1000
+      },
+
+      {
+        id: "fish",
+        icon: "🐟",
+        name: "Fish Enjoyer",
+        description: "Experience the Fish Delivery event.",
+        secret: true,
+        check: s => s.fishEvents >= 1
+      },
+
+      {
+        id: "rat",
+        icon: "🐀",
+        name: "RAT!",
+        description: "Deal with a rat.",
+        secret: true,
+        check: s => s.ratEvents >= 1
+      }
+
+    ];
+
+
+    /* =========================================================
+       STATE
+    ========================================================= */
+
+    const defaultState = {
+
+      saveVersion: SAVE_VERSION,
 
       meows: 0,
       total: 0,
+
       clicks: 0,
 
       perClick: 1,
@@ -2000,95 +1893,1702 @@ document
       bestCombo: 0,
       combo: 0,
 
-      unlockedCats: [
-        "mochi"
-      ],
+      comboTimer: 0,
 
+      unlockedCats: ["mochi"],
       selectedCat: "mochi",
 
       ownedUpgrades: {},
 
-      achievements: []
+      achievements: [],
+
+      prestige: 0,
+      catSouls: 0,
+
+      eventsSeen: 0,
+      fishEvents: 0,
+      ratEvents: 0,
+
+      idleTime: 0,
+
+      lastSave: Date.now(),
+      lastUpdate: Date.now()
 
     };
 
 
-    update();
+    let state = {
+      ...defaultState
+    };
 
-    toast(
-      "Save reset. Fresh cat! :3"
+
+    /* =========================================================
+       DOM
+    ========================================================= */
+
+    const titleScreen =
+      document.getElementById("titleScreen");
+
+    const gameScreen =
+      document.getElementById("gameScreen");
+
+    const startButton =
+      document.getElementById("startButton");
+
+    const continueButton =
+      document.getElementById("continueButton");
+
+    const catButton =
+      document.getElementById("catButton");
+
+    const cat =
+      document.getElementById("cat");
+
+    const catPanel =
+      document.getElementById("catPanel");
+
+    const score =
+      document.getElementById("score");
+
+    const rate =
+      document.getElementById("rate");
+
+    const catName =
+      document.getElementById("catName");
+
+    const catHint =
+      document.getElementById("catHint");
+
+    const upgradeList =
+      document.getElementById("upgradeList");
+
+    const comboDisplay =
+      document.getElementById("comboDisplay");
+
+    const catsModal =
+      document.getElementById("catsModal");
+
+    const achievementsModal =
+      document.getElementById("achievementsModal");
+
+    const catGrid =
+      document.getElementById("catGrid");
+
+    const achievementGrid =
+      document.getElementById("achievementGrid");
+
+    const toastContainer =
+      document.getElementById("toastContainer");
+
+    const clickSound =
+      document.getElementById("clickSound");
+
+    const eventBanner =
+      document.getElementById("eventBanner");
+
+    const eventTitle =
+      document.getElementById("eventTitle");
+
+    const eventDescription =
+      document.getElementById("eventDescription");
+
+    const eventButton =
+      document.getElementById("eventButton");
+
+
+    /* =========================================================
+       FORMAT NUMBERS
+    ========================================================= */
+
+    function formatNumber(number) {
+
+      if (!Number.isFinite(number)) {
+        return "∞";
+      }
+
+      if (number < 1000) {
+        return Math.floor(number).toLocaleString();
+      }
+
+      const units = [
+        "",
+        "K",
+        "M",
+        "B",
+        "T",
+        "Qa",
+        "Qi",
+        "Sx",
+        "Sp",
+        "Oc",
+        "No",
+        "Dc"
+      ];
+
+      const tier =
+        Math.floor(
+          Math.log10(Math.abs(number)) / 3
+        );
+
+      if (tier >= units.length) {
+        return number.toExponential(2);
+      }
+
+      const value =
+        number / Math.pow(1000, tier);
+
+      return value.toFixed(
+        value >= 100 ? 0 :
+        value >= 10 ? 1 :
+        2
+      ) + units[tier];
+    }
+
+
+    /* =========================================================
+       SAVE
+    ========================================================= */
+
+    function saveGame() {
+
+      state.saveVersion = SAVE_VERSION;
+      state.lastSave = Date.now();
+
+      localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify(state)
+      );
+    }
+
+
+    function loadGame() {
+
+      try {
+
+        const raw =
+          localStorage.getItem(SAVE_KEY);
+
+        if (!raw) {
+          return false;
+        }
+
+        const saved =
+          JSON.parse(raw);
+
+        state = {
+          ...defaultState,
+          ...saved
+        };
+
+        migrateSave();
+
+        return true;
+
+      } catch (error) {
+
+        console.warn(
+          "Could not load save:",
+          error
+        );
+
+        return false;
+      }
+    }
+
+
+    function migrateSave() {
+
+      if (!state.unlockedCats) {
+        state.unlockedCats = ["mochi"];
+      }
+
+      if (!state.ownedUpgrades) {
+        state.ownedUpgrades = {};
+      }
+
+      if (!state.achievements) {
+        state.achievements = [];
+      }
+
+      if (typeof state.prestige !== "number") {
+        state.prestige = 0;
+      }
+
+      if (typeof state.catSouls !== "number") {
+        state.catSouls = 0;
+      }
+
+      if (typeof state.eventsSeen !== "number") {
+        state.eventsSeen = 0;
+      }
+
+      if (typeof state.fishEvents !== "number") {
+        state.fishEvents = 0;
+      }
+
+      if (typeof state.ratEvents !== "number") {
+        state.ratEvents = 0;
+      }
+
+      if (typeof state.idleTime !== "number") {
+        state.idleTime = 0;
+      }
+
+      state.saveVersion = SAVE_VERSION;
+    }
+
+
+    function hasSave() {
+
+      return !!localStorage.getItem(SAVE_KEY);
+    }
+
+
+    /* =========================================================
+       PRESTIGE
+    ========================================================= */
+
+    function prestigeRequirement() {
+
+      return 1000000 *
+        Math.pow(
+          10,
+          state.prestige
+        );
+    }
+
+
+    function soulMultiplier() {
+
+      return 1 +
+        state.catSouls * 0.10;
+    }
+
+
+    function canPrestige() {
+
+      return state.meows >= prestigeRequirement();
+    }
+
+
+    function prestige() {
+
+      const requirement =
+        prestigeRequirement();
+
+      if (!canPrestige()) {
+
+        showToast(
+          `🌟 You need ${formatNumber(requirement)} meows to prestige!`
+        );
+
+        return;
+      }
+
+      const soulsGained =
+        Math.max(
+          1,
+          Math.floor(
+            state.meows /
+            requirement
+          )
+        );
+
+      const confirmed =
+        confirm(
+          `🌟 PRESTIGE?\n\n` +
+          `You will reset your current meows and upgrades.\n\n` +
+          `You will gain ${soulsGained} Cat Soul(s).\n\n` +
+          `Cat Souls permanently increase ALL production by 10% each.\n\n` +
+          `Do it?`
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      state.prestige += soulsGained;
+      state.catSouls += soulsGained;
+
+      state.meows = 0;
+      state.perClick = 1;
+      state.perSecond = 0;
+      state.upgradesBought = 0;
+      state.ownedUpgrades = {};
+      state.combo = 0;
+
+      showToast(
+        `🌟 ASCENDED! +${soulsGained} Cat Soul(s)!`
+      );
+
+      saveGame();
+      update();
+    }
+
+
+    /* =========================================================
+       UPGRADES
+    ========================================================= */
+
+    function getUpgradeLevel(id) {
+
+      return state.ownedUpgrades[id] || 0;
+    }
+
+
+    function getUpgradeCost(upgrade) {
+
+      const level =
+        getUpgradeLevel(upgrade.id);
+
+      return Math.ceil(
+        upgrade.base *
+        Math.pow(
+          1.55,
+          level
+        )
+      );
+    }
+
+
+    function buyUpgrade(id) {
+
+      const upgrade =
+        upgrades.find(
+          item => item.id === id
+        );
+
+      if (!upgrade) {
+        return;
+      }
+
+      const cost =
+        getUpgradeCost(upgrade);
+
+      if (state.meows < cost) {
+
+        showToast(
+          "💸 You're too broke. Pet harder."
+        );
+
+        return;
+      }
+
+      state.meows -= cost;
+
+      state.ownedUpgrades[id] =
+        getUpgradeLevel(id) + 1;
+
+      state.upgradesBought++;
+
+      recalculateStats();
+
+      showToast(
+        `${upgrade.emoji} ${upgrade.name} purchased!`
+      );
+
+      update();
+    }
+
+
+    function recalculateStats() {
+
+      let clickPower = 1;
+      let passive = 0;
+
+      for (const upgrade of upgrades) {
+
+        const level =
+          getUpgradeLevel(upgrade.id);
+
+        if (upgrade.type === "click") {
+
+          clickPower +=
+            upgrade.amount * level;
+
+        } else {
+
+          passive +=
+            upgrade.amount * level;
+        }
+      }
+
+      const multiplier =
+        soulMultiplier();
+
+      state.perClick =
+        clickPower * multiplier;
+
+      state.perSecond =
+        passive * multiplier;
+    }
+
+
+    function renderUpgrades() {
+
+      upgradeList.innerHTML = "";
+
+      for (const upgrade of upgrades) {
+
+        const level =
+          getUpgradeLevel(upgrade.id);
+
+        const cost =
+          getUpgradeCost(upgrade);
+
+        const affordable =
+          state.meows >= cost;
+
+        const button =
+          document.createElement("button");
+
+        button.className = "upgrade";
+
+        button.disabled =
+          !affordable;
+
+        button.innerHTML = `
+
+          <div class="upgrade-top">
+
+            <div class="upgrade-name">
+              ${upgrade.emoji}
+              ${upgrade.name}
+            </div>
+
+            <div class="upgrade-level">
+              Lv. ${level}
+            </div>
+
+          </div>
+
+          <div class="upgrade-description">
+            ${upgrade.description}
+          </div>
+
+          <div class="upgrade-cost">
+            💰 ${formatNumber(cost)} meows
+          </div>
+        `;
+
+        button.addEventListener(
+          "click",
+          () => buyUpgrade(upgrade.id)
+        );
+
+        upgradeList.appendChild(button);
+      }
+
+
+      /* PRESTIGE */
+
+      const prestigeBox =
+        document.createElement("div");
+
+      prestigeBox.style.marginTop = "18px";
+      prestigeBox.style.padding = "15px";
+      prestigeBox.style.background = "#f6efff";
+      prestigeBox.style.borderRadius = "18px";
+
+      const requirement =
+        prestigeRequirement();
+
+      const can =
+        canPrestige();
+
+      prestigeBox.innerHTML = `
+
+        <div style="font-weight:1000;font-size:1.1rem;">
+          🌟 Prestige
+        </div>
+
+        <div style="font-size:.78rem;opacity:.65;margin:5px 0;">
+          Reset your progress for permanent power.
+        </div>
+
+        <div style="font-size:.8rem;margin-bottom:8px;">
+          Current souls:
+          <b>${formatNumber(state.catSouls)}</b>
+        </div>
+
+        <div style="font-size:.8rem;margin-bottom:10px;">
+          Requirement:
+          <b>${formatNumber(requirement)}</b>
+        </div>
+
+        <button
+          id="prestigeButton"
+          class="main-button"
+          style="
+            width:100%;
+            padding:10px;
+            background:${can ? "#c5a4ef" : "#ded6e8"};
+            color:white;
+            box-shadow:none;
+          "
+          ${can ? "" : "disabled"}
+        >
+          🌟 ASCEND
+        </button>
+      `;
+
+      upgradeList.appendChild(
+        prestigeBox
+      );
+
+      document
+        .getElementById("prestigeButton")
+        .addEventListener(
+          "click",
+          prestige
+        );
+    }
+
+
+    /* =========================================================
+       CATS
+    ========================================================= */
+
+    function getCurrentCat() {
+
+      return cats.find(
+        cat => cat.id === state.selectedCat
+      ) || cats[0];
+    }
+
+
+    function renderCatCollection() {
+
+      catGrid.innerHTML = "";
+
+      for (const item of cats) {
+
+        const unlocked =
+          state.unlockedCats.includes(
+            item.id
+          );
+
+        const selected =
+          state.selectedCat === item.id;
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "cat-card" +
+          (selected ? " selected" : "") +
+          (!unlocked ? " locked" : "");
+
+        card.innerHTML = `
+
+          <div class="cat-icon">
+            ${unlocked ? item.emoji : "❓"}
+          </div>
+
+          <div class="cat-card-name">
+            ${unlocked ? item.name : "Mystery Cat"}
+          </div>
+
+          <div class="cat-card-desc">
+            ${
+              unlocked
+                ? item.desc
+                : "Unlock this mysterious creature."
+            }
+          </div>
+
+          ${
+            unlocked
+              ? `
+                <button>
+                  ${selected ? "✓ Selected" : "Select"}
+                </button>
+              `
+              : `
+                <button>
+                  💰 ${formatNumber(item.price)}
+                </button>
+              `
+          }
+        `;
+
+        const button =
+          card.querySelector("button");
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            if (unlocked) {
+
+              state.selectedCat =
+                item.id;
+
+              update();
+              renderCatCollection();
+
+              showToast(
+                `${item.emoji} ${item.name} selected!`
+              );
+
+            } else {
+
+              unlockCat(item);
+            }
+
+          }
+        );
+
+        catGrid.appendChild(card);
+      }
+    }
+
+
+    function unlockCat(item) {
+
+      if (state.unlockedCats.includes(item.id)) {
+        return;
+      }
+
+      if (state.meows < item.price) {
+
+        showToast(
+          `🐱 You need ${formatNumber(item.price)} meows!`
+        );
+
+        return;
+      }
+
+      state.meows -= item.price;
+
+      state.unlockedCats.push(
+        item.id
+      );
+
+      showToast(
+        `${item.emoji} ${item.name} unlocked!`
+      );
+
+      update();
+      renderCatCollection();
+    }
+
+
+    /* =========================================================
+       ACHIEVEMENTS
+    ========================================================= */
+
+    function checkAchievements() {
+
+      for (const achievement of achievements) {
+
+        if (
+          state.achievements.includes(
+            achievement.id
+          )
+        ) {
+          continue;
+        }
+
+        if (achievement.check(state)) {
+
+          state.achievements.push(
+            achievement.id
+          );
+
+          showToast(
+            `🏆 Achievement unlocked: ${achievement.name}`
+          );
+        }
+      }
+    }
+
+
+    function renderAchievements() {
+
+      achievementGrid.innerHTML = "";
+
+      for (const achievement of achievements) {
+
+        const unlocked =
+          state.achievements.includes(
+            achievement.id
+          );
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "achievement " +
+          (unlocked
+            ? "unlocked"
+            : "locked");
+
+        let name =
+          achievement.name;
+
+        let description =
+          achievement.description;
+
+        let icon =
+          achievement.icon;
+
+        if (
+          achievement.secret &&
+          !unlocked
+        ) {
+
+          name = "???";
+          description = "A secret achievement.";
+          icon = "❓";
+        }
+
+        card.innerHTML = `
+
+          <div class="achievement-icon">
+            ${icon}
+          </div>
+
+          <div class="achievement-name">
+            ${name}
+          </div>
+
+          <div class="achievement-description">
+            ${description}
+          </div>
+
+        `;
+
+        achievementGrid.appendChild(card);
+      }
+    }
+
+
+    /* =========================================================
+       RANDOM EVENTS
+    ========================================================= */
+
+    let currentEvent = null;
+
+    const randomEvents = [
+
+      {
+        id: "fish",
+
+        title: "🐟 FISH DELIVERY",
+
+        description:
+          "A suspicious man has left a pile of fish at your door.",
+
+        button:
+          "TAKE THE FISH",
+
+        action() {
+
+          const reward =
+            Math.max(
+              100,
+              Math.floor(
+                state.perSecond * 30 +
+                state.perClick * 50
+              )
+            );
+
+          state.meows += reward;
+          state.total += reward;
+
+          state.fishEvents++;
+
+          showToast(
+            `🐟 You received ${formatNumber(reward)} meows!`
+          );
+        }
+      },
+
+
+      {
+        id: "double",
+
+        title: "⚡ CAT ZOOMIES",
+
+        description:
+          "The cat has entered MAXIMUM ZOOMIES. Click power is doubled!",
+
+        button:
+          "ZOOM",
+
+        action() {
+
+          const bonus =
+            state.perClick * 100;
+
+          state.meows += bonus;
+          state.total += bonus;
+
+          showToast(
+            `⚡ ZOOMIES! +${formatNumber(bonus)} meows!`
+          );
+        }
+      },
+
+
+      {
+        id: "money",
+
+        title: "💰 CAT TAX REFUND",
+
+        description:
+          "The government has accidentally refunded your cat taxes.",
+
+        button:
+          "ACCEPT FREE MONEY",
+
+        action() {
+
+          const reward =
+            Math.max(
+              500,
+              Math.floor(
+                state.meows * 0.1 +
+                500
+              )
+            );
+
+          state.meows += reward;
+          state.total += reward;
+
+          showToast(
+            `💰 Refund: +${formatNumber(reward)} meows!`
+          );
+        }
+      },
+
+
+      {
+        id: "rat",
+
+        title: "🐀 RAT INVASION",
+
+        description:
+          "A rat has entered the cat's territory. CLICK IT.",
+
+        button:
+          "DESTROY RAT",
+
+        action() {
+
+          const reward =
+            Math.max(
+              250,
+              Math.floor(
+                state.perClick * 100
+              )
+            );
+
+          state.meows += reward;
+          state.total += reward;
+
+          state.ratEvents++;
+
+          showToast(
+            `🐀 RAT DEFEATED! +${formatNumber(reward)} meows!`
+          );
+        }
+      },
+
+
+      {
+        id: "cardboard",
+
+        title: "📦 LEGENDARY BOX",
+
+        description:
+          "You found the ultimate cardboard box.",
+
+        button:
+          "ENTER BOX",
+
+        action() {
+
+          const reward =
+            Math.max(
+              1000,
+              Math.floor(
+                state.perSecond * 60
+              )
+            );
+
+          state.meows += reward;
+          state.total += reward;
+
+          showToast(
+            `📦 The box contained ${formatNumber(reward)} meows!`
+          );
+        }
+      },
+
+
+      {
+        id: "fishrain",
+
+        title: "🌧️ FISH RAIN",
+
+        description:
+          "It's raining fish. Nobody knows why.",
+
+        button:
+          "OPEN MOUTH",
+
+        action() {
+
+          const reward =
+            Math.max(
+              500,
+              Math.floor(
+                state.perClick * 250
+              )
+            );
+
+          state.meows += reward;
+          state.total += reward;
+
+          showToast(
+            `🌧️ FISH RAIN! +${formatNumber(reward)} meows!`
+          );
+        }
+      }
+
+    ];
+
+
+    function triggerRandomEvent() {
+
+      if (
+        gameScreen.classList.contains("hidden")
+      ) {
+        return;
+      }
+
+      const event =
+        randomEvents[
+          Math.floor(
+            Math.random() *
+            randomEvents.length
+          )
+        ];
+
+      currentEvent = event;
+
+      state.eventsSeen++;
+
+      eventTitle.textContent =
+        event.title;
+
+      eventDescription.textContent =
+        event.description;
+
+      eventButton.textContent =
+        event.button;
+
+      eventBanner.classList.add("show");
+
+      saveGame();
+
+      setTimeout(
+        () => {
+
+          if (currentEvent === event) {
+
+            eventBanner.classList.remove(
+              "show"
+            );
+
+            currentEvent = null;
+          }
+
+        },
+        12000
+      );
+    }
+
+
+    eventButton.addEventListener(
+      "click",
+      () => {
+
+        if (!currentEvent) {
+          return;
+        }
+
+        currentEvent.action();
+
+        eventBanner.classList.remove(
+          "show"
+        );
+
+        currentEvent = null;
+
+        update();
+      }
     );
 
-  };
+
+    /* =========================================================
+       CAT CLICK
+    ========================================================= */
+
+    catButton.addEventListener(
+      "click",
+      () => {
+
+        state.clicks++;
+
+        state.idleTime = 0;
+
+        state.combo++;
+        state.comboTimer = 1.25;
+
+        if (
+          state.combo >
+          state.bestCombo
+        ) {
+
+          state.bestCombo =
+            state.combo;
+        }
 
 
-/* =====================================================
-   PASSIVE MEOWS
-===================================================== */
+        let multiplier = 1;
 
-setInterval(
-  () => {
+        /*
+          Combo multiplier:
+          x1-9  = normal
+          x10   = x2
+          x25   = x3
+          x50   = x5
+          x100  = x10
+          x500  = x25
+          x1000 = x50
+        */
 
-    if (
-      document
-        .getElementById("gameScreen")
-        .classList.contains("hidden")
-    ) {
-      return;
+        if (state.combo >= 1000) {
+          multiplier = 50;
+        } else if (state.combo >= 500) {
+          multiplier = 25;
+        } else if (state.combo >= 100) {
+          multiplier = 10;
+        } else if (state.combo >= 50) {
+          multiplier = 5;
+        } else if (state.combo >= 25) {
+          multiplier = 3;
+        } else if (state.combo >= 10) {
+          multiplier = 2;
+        }
+
+
+        /*
+          Small chance for a critical meow.
+        */
+
+        const critical =
+          Math.random() < 0.025;
+
+        if (critical) {
+          multiplier *= 5;
+        }
+
+
+        const gained =
+          state.perClick *
+          multiplier;
+
+        state.meows += gained;
+        state.total += gained;
+
+
+        /* SOUND */
+
+        try {
+
+          clickSound.currentTime = 0;
+
+          clickSound.play()
+            .catch(() => {});
+
+        } catch (error) {}
+
+
+        /* ANIMATION */
+
+        cat.classList.remove(
+          "bounce"
+        );
+
+        void cat.offsetWidth;
+
+        cat.classList.add(
+          "bounce"
+        );
+
+
+        /* FLOATING TEXT */
+
+        const floating =
+          document.createElement("div");
+
+        floating.className =
+          "floating-text";
+
+        floating.textContent =
+          critical
+            ? `💥 CRIT! +${formatNumber(gained)}`
+            : `+${formatNumber(gained)}`;
+
+        if (critical) {
+          floating.style.fontSize = "1.7rem";
+        }
+
+        const panelRect =
+          catPanel.getBoundingClientRect();
+
+        const catRect =
+          cat.getBoundingClientRect();
+
+        floating.style.left =
+          (
+            catRect.left -
+            panelRect.left +
+            catRect.width / 2
+          ) + "px";
+
+        floating.style.top =
+          (
+            catRect.top -
+            panelRect.top +
+            catRect.height / 3
+          ) + "px";
+
+        catPanel.appendChild(
+          floating
+        );
+
+        setTimeout(
+          () => floating.remove(),
+          1000
+        );
+
+
+        if (
+          state.combo === 10 ||
+          state.combo === 25 ||
+          state.combo === 50 ||
+          state.combo === 100 ||
+          state.combo === 500 ||
+          state.combo === 1000
+        ) {
+
+          showToast(
+            `🔥 COMBO x${state.combo}!`
+          );
+        }
+
+
+        if (critical) {
+
+          showToast(
+            "💥 CRITICAL MEOW!"
+          );
+        }
+
+
+        update();
+      }
+    );
+
+
+    /* =========================================================
+       GAME LOOP
+    ========================================================= */
+
+    setInterval(
+      () => {
+
+        if (
+          gameScreen.classList.contains(
+            "hidden"
+          )
+        ) {
+          return;
+        }
+
+
+        /*
+          Passive income
+        */
+
+        if (state.perSecond > 0) {
+
+          const gain =
+            state.perSecond;
+
+          state.meows += gain;
+          state.total += gain;
+        }
+
+
+        /*
+          Combo timer
+        */
+
+        if (state.comboTimer > 0) {
+
+          state.comboTimer -= 1;
+
+          if (
+            state.comboTimer <= 0
+          ) {
+
+            state.combo = 0;
+          }
+        }
+
+
+        /*
+          Idle timer
+        */
+
+        state.idleTime++;
+
+
+        /*
+          Random event chance
+        */
+
+        if (
+          Math.random() < 0.018
+        ) {
+
+          triggerRandomEvent();
+        }
+
+
+        update();
+
+      },
+      1000
+    );
+
+
+    /* =========================================================
+       AUTOSAVE
+    ========================================================= */
+
+    setInterval(
+      () => {
+
+        if (
+          !gameScreen.classList.contains(
+            "hidden"
+          )
+        ) {
+
+          saveGame();
+        }
+
+      },
+      5000
+    );
+
+
+    /* =========================================================
+       UPDATE
+    ========================================================= */
+
+    function update() {
+
+      recalculateStats();
+
+      checkAchievements();
+
+
+      const currentCat =
+        getCurrentCat();
+
+
+      score.textContent =
+        formatNumber(
+          state.meows
+        );
+
+
+      rate.textContent =
+        `+${formatNumber(state.perClick)} per click • ` +
+        `+${formatNumber(state.perSecond)}/sec • ` +
+        `🌟 ${formatNumber(state.catSouls)} souls`;
+
+
+      catName.textContent =
+        currentCat.name;
+
+
+      catHint.textContent =
+        currentCat.desc;
+
+
+      cat.textContent =
+        currentCat.emoji;
+
+
+      cat.style.setProperty(
+        "--cat-color",
+        currentCat.color
+      );
+
+
+      catPanel.style.setProperty(
+        "--cat-color",
+        currentCat.color
+      );
+
+
+      if (state.combo > 1) {
+
+        comboDisplay.textContent =
+          `🔥 COMBO x${state.combo}`;
+
+        comboDisplay.classList.add(
+          "active"
+        );
+
+      } else {
+
+        comboDisplay.classList.remove(
+          "active"
+        );
+      }
+
+
+      renderUpgrades();
     }
 
 
-    if (
-      state.perSecond <= 0
-    ) {
-      return;
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    function showToast(message) {
+
+      const toast =
+        document.createElement("div");
+
+      toast.className = "toast";
+
+      toast.textContent = message;
+
+      toastContainer.appendChild(
+        toast
+      );
+
+      setTimeout(
+        () => toast.remove(),
+        3600
+      );
     }
 
 
-    state.meows +=
-      state.perSecond;
+    /* =========================================================
+       MODALS
+    ========================================================= */
 
-    state.total +=
-      state.perSecond;
+    document
+      .getElementById("catsButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          renderCatCollection();
+
+          catsModal.classList.remove(
+            "hidden"
+          );
+        }
+      );
+
+
+    document
+      .getElementById("achievementsButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          renderAchievements();
+
+          achievementsModal.classList.remove(
+            "hidden"
+          );
+        }
+      );
+
+
+    document
+      .querySelectorAll("[data-close]")
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              document
+                .getElementById(
+                  button.dataset.close
+                )
+                .classList.add(
+                  "hidden"
+                );
+            }
+          );
+
+        }
+      );
+
+
+    [catsModal, achievementsModal]
+      .forEach(
+        modal => {
+
+          modal.addEventListener(
+            "click",
+            event => {
+
+              if (
+                event.target === modal
+              ) {
+
+                modal.classList.add(
+                  "hidden"
+                );
+              }
+
+            }
+          );
+
+        }
+      );
+
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Escape") {
+
+          catsModal.classList.add(
+            "hidden"
+          );
+
+          achievementsModal.classList.add(
+            "hidden"
+          );
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       START / CONTINUE
+    ========================================================= */
+
+    function enterGame() {
+
+      titleScreen.classList.add(
+        "hidden"
+      );
+
+      gameScreen.classList.remove(
+        "hidden"
+      );
+
+      state.lastUpdate =
+        Date.now();
+
+      update();
+    }
+
+
+    startButton.addEventListener(
+      "click",
+      () => {
+
+        /*
+          If there's already a save,
+          don't accidentally destroy it.
+        */
+
+        if (hasSave()) {
+
+          loadGame();
+
+        } else {
+
+          state = {
+            ...defaultState
+          };
+
+        }
+
+        enterGame();
+      }
+    );
+
+
+    continueButton.addEventListener(
+      "click",
+      () => {
+
+        loadGame();
+
+        enterGame();
+      }
+    );
+
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+
+    document
+      .getElementById("resetButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          const confirmed =
+            confirm(
+              "Are you sure you want to delete EVERYTHING?\n\n" +
+              "Cats, upgrades, achievements, prestige — all of it.\n\n" +
+              "There is no undo."
+            );
+
+          if (!confirmed) {
+            return;
+          }
+
+          localStorage.removeItem(
+            SAVE_KEY
+          );
+
+          state = {
+            ...defaultState
+          };
+
+          showToast(
+            "🗑️ Everything has been reset."
+          );
+
+          titleScreen.classList.remove(
+            "hidden"
+          );
+
+          gameScreen.classList.add(
+            "hidden"
+          );
+
+          update();
+        }
+      );
+
+
+    /* =========================================================
+       INITIAL LOAD
+    ========================================================= */
+
+    if (hasSave()) {
+
+      continueButton.classList.remove(
+        "hidden"
+      );
+    }
+
+
+    /*
+      Try loading silently so
+      browser refreshes work properly.
+    */
+
+    if (hasSave()) {
+
+      loadGame();
+
+      /*
+        Don't automatically enter the game.
+        Player gets the title screen.
+      */
+
+      recalculateStats();
+    }
+
+
+    /* =========================================================
+       OFFLINE INCOME
+    ========================================================= */
+
+    function calculateOfflineIncome() {
+
+      if (!state.lastSave) {
+        return;
+      }
+
+      const elapsed =
+        Math.max(
+          0,
+          (Date.now() - state.lastSave) /
+          1000
+        );
+
+      /*
+        Cap offline income at 8 hours.
+      */
+
+      const seconds =
+        Math.min(
+          elapsed,
+          60 * 60 * 8
+        );
+
+      if (
+        seconds <= 5 ||
+        state.perSecond <= 0
+      ) {
+        return;
+      }
+
+      const earned =
+        state.perSecond *
+        seconds;
+
+      state.meows += earned;
+      state.total += earned;
+
+      setTimeout(
+        () => {
+
+          showToast(
+            `💤 Your cats earned ${formatNumber(earned)} meows while you were away!`
+          );
+
+        },
+        800
+      );
+    }
+
+
+    calculateOfflineIncome();
 
     update();
 
-  },
-  1000
-);
-
-
-/* =====================================================
-   AUTOSAVE
-===================================================== */
-
-setInterval(
-  saveGame,
-  5000
-);
-
-
-/* =====================================================
-   INITIAL LOAD
-===================================================== */
-
-loadGame();
-
-
-/*
-   Only show Continue if
-   a save actually exists.
-*/
-
-if (!hasSave()) {
-
-  document
-    .getElementById("continueBtn")
-    .style.display = "none";
-
-}
-
-</script>
+  </script>
 
 </body>
 </html>
